@@ -1,27 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
-
 metadata:
   name: retailkart-deployment
-
 spec:
   replicas: 2
-
   selector:
     matchLabels:
       app: retailkart
-
   template:
     metadata:
       labels:
         app: retailkart
-
     spec:
       containers:
       - name: retailkart-container
-        image: retailkart-app:latest
-
-        imagePullPolicy: Never
-
+        image: sathvikadev/retailkart:v3
         ports:
         - containerPort: 8081
