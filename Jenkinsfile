@@ -1,4 +1,5 @@
 pipeline {
+
     agent any
 
     stages {
@@ -18,22 +19,26 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t retailkart-app .'
+                sh 'docker build -t retailkart-app:v3 .'
             }
         }
 
-        stage('Stop Old Container') {
+        stage('Load Image into Minikube') {
             steps {
-                sh 'docker stop retailkart-container || true'
-                sh 'docker rm retailkart-container || true'
+                sh 'minikube image load retailkart-app:v3'
             }
         }
 
-        stage('Run New Container') {
+        stage('Deploy to Kubernetes') {
             steps {
-                sh 'docker run -d -p 8081:8081 --name retailkart-container retailkart-app'
+                sh 'kubectl set image deployment/retailkart-deployment retailkart-container=retailkart-app:v3'
             }
         }
 
+        stage('Verify Deployment') {
+            steps {
+                sh 'kubectl get pods'
+            }
+        }
     }
 }

@@ -8,6 +8,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "RetailKart DevOps Project Running Successfully 🚀";
+        return "RetailKart Application Version 2 Deployed via Kubernetes 🚀";
     }
 }
