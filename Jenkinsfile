@@ -21,10 +21,11 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonarqube') {
                     sh '''
-                    mvn sonar:sonar \
+                    mvn clean verify sonar:sonar \
                     -Dsonar.projectKey=retailkart \
+                    -Dsonar.projectName=retailkart \
                     -Dsonar.host.url=http://host.docker.internal:9000 \
-                    -Dsonar.login=sqp_fb241ab77635e250deb6daa83cb4e7dcc6d0839e
+                    -Dsonar.token=sqp_fb241ab77635e250deb6daa83cb4e7dcc6d0839e
                     '''
                 }
             }
