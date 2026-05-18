@@ -30,18 +30,5 @@ pipeline {
                 sh 'docker build -t retailkart-app:v3 .'
             }
         }
-
-        stage('Deploy to Kubernetes') {
-            steps {
-                sh 'kubectl rollout restart deployment retailkart-deployment'
-            }
-        }
-
-        stage('Verify Deployment') {
-            steps {
-                sh 'kubectl get pods'
-            }
-        }
-
     }
 }
