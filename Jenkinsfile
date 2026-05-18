@@ -24,7 +24,7 @@ pipeline {
                     mvn clean verify sonar:sonar \
                     -Dsonar.projectKey=retailkart \
                     -Dsonar.projectName=retailkart \
-                    -Dsonar.host.url=http://host.docker.internal:9000 \
+                    -Dsonar.host.url=http://172.17.0.1:9000
                     -Dsonar.token=sqp_fb241ab77635e250deb6daa83cb4e7dcc6d0839e
                     '''
                 }
