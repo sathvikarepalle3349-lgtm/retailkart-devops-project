@@ -31,15 +31,9 @@ pipeline {
             }
         }
 
-        stage('Load Image into Minikube') {
-            steps {
-                sh 'minikube image load retailkart-app:v3'
-            }
-        }
-
         stage('Deploy to Kubernetes') {
             steps {
-                sh 'kubectl set image deployment/retailkart-deployment retailkart-container=retailkart-app:v3'
+                sh 'kubectl rollout restart deployment retailkart-deployment'
             }
         }
 
@@ -49,4 +43,3 @@ pipeline {
             }
         }
     }
-}
