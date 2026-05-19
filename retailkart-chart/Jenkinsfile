@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main',
+                url: 'https://github.com/sathvikarepalle3349-lgtm/retailkart-devops-project.git'
+            }
+        }
+
+        stage('Build Application') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh '''
+                    mvn sonar:sonar \
+                    -Dsonar.projectKey=retailkart \
+                    -Dsonar.projectName=retailkart \
+                    -Dsonar.host.url=http://172.17.0.1:9000 \
+                    -Dsonar.token=squ_285d1cc20b8ff30922577993daa05e6dfffa3232
+                    '''
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t retailkart-app:v3 .'
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'dockerhub-creds',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )]) {
+
+                        sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+
+                        sh 'docker tag retailkart-app:v3 sathvikadev/retailkart-app:v3'
+
+                        sh 'docker push sathvikadev/retailkart-app:v3'
+                    }
+                }
+            }
+        }
+    }
+}
